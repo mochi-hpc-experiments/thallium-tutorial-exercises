@@ -3,7 +3,7 @@
 This repository contains exercises meant to accompany Mochi tutorials.
 These tutorials focus on using the C++ language, with the Thallium library.
 They revolve around the development of a phone book microservice, i.e.
-a service that associates names (null-terminated strings) with phone
+a service that associates names (`std::string`s) with phone
 numbers (which will be represented as `uint64_t` values).
 Only the first exercise uses the code present in this repository,
 however this README provides instructions for all three exercises.
