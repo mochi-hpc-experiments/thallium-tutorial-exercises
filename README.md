@@ -7,7 +7,7 @@ a service that associates names (`std::string`s) with phone
 numbers (which will be represented as `uint64_t` values).
 Only the first exercise uses the code present in this repository,
 however this README provides instructions for all three exercises.
-A equivalent repository for C projects is available
+An equivalent repository for C projects is available
 [here](https://github.com/mochi-hpc-experiments/margo-tutorial-exercises).
 
 ## Initial setup
