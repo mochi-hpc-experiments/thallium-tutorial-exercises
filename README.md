@@ -19,7 +19,7 @@ Please follow the initial setup
 
 The *src* directory provides a *client.cpp* client code, a *server.cpp*
 server code, a *types.hpp* header defining some types, and a *phonebook.hpp*.
-file containing an implementation of a phonebook using an `std::unordered_map`..
+file containing an implementation of a phonebook using an `std::unordered_map`.
 
 In this exercise we will make the server manage a phonebook and
 service two kinds of RPCs: adding a new entry, and looking up a phone
