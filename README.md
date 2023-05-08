@@ -13,7 +13,8 @@ An equivalent repository for C projects is available
 ## Initial setup
 
 Please follow the initial setup
-[here](https://github.com/mochi-hpc-experiments/margo-tutorial-exercises).
+[here](https://github.com/mochi-hpc-experiments/margo-tutorial-exercises), then
+clone the present repository.
 
 ## Exercise 1: simple RPC and RDMA using Thallium
 
