@@ -3,11 +3,11 @@
 This repository contains exercises meant to accompany Mochi tutorials.
 These tutorials focus on using the C++ language, with the Thallium library.
 They revolve around the development of a phone book microservice, i.e.
-a service that associates names (null-terminated strings) with phone
+a service that associates names (`std::string`s) with phone
 numbers (which will be represented as `uint64_t` values).
 Only the first exercise uses the code present in this repository,
 however this README provides instructions for all three exercises.
-A equivalent repository for C projects is available
+An equivalent repository for C projects is available
 [here](https://github.com/mochi-hpc-experiments/margo-tutorial-exercises).
 
 ## Initial setup
@@ -87,7 +87,7 @@ $ spack repo add mochi-spack-packages
 
 The *src* directory provides a *client.cpp* client code, a *server.cpp*
 server code, a *types.hpp* header defining some types, and a *phonebook.hpp*.
-file containing an implementation of a phonebook using an `std::unordered_map`..
+file containing an implementation of a phonebook using an `std::unordered_map`.
 
 In this exercise we will make the server manage a phonebook and
 service two kinds of RPCs: adding a new entry, and looking up a phone
