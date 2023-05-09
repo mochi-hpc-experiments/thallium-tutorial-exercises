@@ -12,8 +12,76 @@ A equivalent repository for C projects is available
 
 ## Initial setup
 
-Please follow the initial setup
-[here](https://github.com/mochi-hpc-experiments/margo-tutorial-exercises).
+For most people, the docker container will be the most straightforward way to
+set up your environment.  You don't have to use docker if you already have a
+way to set up a Mochi environment (e.g. Spack already installed and setup on
+your machine).
+
+### Option 1 (preferred): setting up with Docker
+
+You need to have Docker installed on your machine. Once installed and working,
+the following commands will pull the proper Docker image.
+
+```
+$ docker pull carns/mochi-tutorial:latest
+$ docker tag carns/mochi-tutorial:latest mochi-tutorial
+```
+
+Before starting the container, create an empty `mochi-tutorial` directory in your
+host machine.
+
+```
+$ mkdir mochi-tutorial
+```
+
+We will map this directory to a `/mochi-tutorial` mount point in the container,
+in which we will place our code. This will allow you to edit the code with your
+editor of choice outside the container, and jump into the container to build
+the code and run it (you can also choose to edit the code directory inside the
+container using Vim if you prefer).
+
+The following run command will instantiate a new container from the
+mochi-tutorial image. The container will have its name and hostname both set
+to "mt1" (short for "mochi tutorial 1"). Note that the container is configured
+to run indefinitely in detached mode and allow login for the "mochi" user with
+no password.
+
+```
+$ docker run --detach --name mt1 --volume $(pwd)/mochi-tutorial:/mochi-tutorial mochi-tutorial
+```
+
+Once the container is running, you can open a shell on it using the following
+command.
+
+```
+$ docker exec -it mt1 /bin/bash
+```
+
+We recommand that you open multiple shells while following these exercises,
+so that you can build the code, run a server and run a client in different
+terminals.
+
+You can use the following commands to stop and restart the "mt1" container.
+
+```
+$ docker stop mt1
+$ docker start mt1
+```
+
+If you need more detailed instructions or want to build the docker image
+yourself from its Dockerfile recipe, please refer to
+[these instructions](https://github.com/mochi-hpc-experiments/mochi-tutorial/blob/main/docker/README.md).
+
+### Option 2: setting up manually
+
+If you have Spack already installed and setup on your machine, simply make sure
+that you have the Mochi namespace available for Spack to use. This can be done
+as follows.
+
+```
+$ git clone https://github.com/mochi-hpc/mochi-spack-packages.git
+$ spack repo add mochi-spack-packages
+```
 
 ## Exercise 1: simple RPC and RDMA using Thallium
 
