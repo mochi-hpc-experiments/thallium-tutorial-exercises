@@ -15,6 +15,9 @@ int main(int argc, char** argv) {
 
     tl::engine myEngine(protocol, THALLIUM_CLIENT_MODE);
     tl::remote_procedure sum = myEngine.define("sum");
+    /* (5) Register the insert and lookup remote procedures here,
+     * obtaining the insert and lookup remote_procedure objects. */
+
     tl::endpoint server = myEngine.lookup(server_address);
 
     vector3d a{1,2,3}, b{4,5,6};

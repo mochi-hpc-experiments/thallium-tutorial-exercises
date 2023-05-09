@@ -97,8 +97,8 @@ number associated with a name.
 code:
 
 ```
-$ spack env create tl-tuto-env spack.yaml
-$ spack env activate tl-tuto-env
+$ spack env create thallium-tuto-env spack.yaml
+$ spack env activate thallium-tuto-env
 $ spack install
 $ mkdir build
 $ cd build
@@ -109,7 +109,7 @@ $ make
 This will create the *client* and *server* programs.
 
 * You can test your client and server programs by opening two terminals
-  (make sure you have run `spack env activate tl-tuto-env` in them to
+  (make sure you have run `spack env activate thallium-tuto-env` in them to
   activate your spack environment) and running the following from the *build*
   directory.
 
@@ -133,28 +133,27 @@ $ src/client na+sm <server-address>
   The server is setup to run indefinitely. You may kill it with Ctrl-C.
 
 * Looking at the API in *phonebook.hpp*, edit *server.cpp* to instanciate
-  a phonebook in `main()`.
+  a phonebook in `main()` (see comment `(1)`).
 
 * Our two RPCs, which we will call "insert" and "lookup", will need
   argument and return types. Edit the *types.hpp* file to add the necessary
   type definitions for these RPCs, for instance an `entry` class containing
-  a string field and a `uint64_t` field.
+  a string field and a `uint64_t` field (see comment `(2)` in the file).
+  Note: you may need to include `thallium/serialization/stl/string.hpp`
+  so that Thallium knows how to serialize strings.
+
 
 * Edit *server.cpp* to add the definitions and declarations of the lambda functions
-  for our two RPCs. Feel free to copy/paste and modify the existing `sum` RPC.
+  for our two RPCs. Feel free to copy/paste and modify the existing `sum` RPC
+  (comments `(3)` and `(4)`).
 
-* Edit *client.cpp* and use the existing code as an example to (1) register
-  the two RPCs here as well, and (2) define two `insert` and `lookup` functions
-  that will take a `tl::engine` alongside the necessary arguments
-  to call the functions on the server.
-
-Note: you may need to include `thallium/serialization/stl/string.hpp` in `types.hpp`
-so that Thallium knows how to serialize strings.
+* Edit *client.cpp* and use the existing code as an example to register
+  the two RPCs here as well (comment `(5)`).
 
 * Try out your code by calling these `insert` and `lookup` functions a few
   times in the client.
 
-### Bonus
+### Bonus: using RDMA to transfer larger amounts of data
 
 Do this bonus part only if you have time, or as an exercise later.
 In this part, we will add a `lookup_multi` RPC that uses
@@ -163,14 +162,17 @@ numbers(in practice this would be too little data to call for the use of RDMA,
 but we will just pretent). For this, you may use the example
 [here](https://mochi.readthedocs.io/en/latest/thallium/08_rdma.html).
 
-* Your `lookup_multi` RPC could take the list of names to look up as a `vector` of
-  `string`s and return a vector of `uint64_t`s.
+We assume that the names to lookup are stored in a `std::vector<std::string>`.
 
-* You will need to create two bulk handles on the client and two on the server.
-  On the client, the first will expose the names as read-only (remember that
-  `engine::expose` can take a vector of non-contiguous segments, but you will
-  need to use `name.size()+1` as the size of each segment to keep the null
+* You will need to create two bulk handles (`tl::bulk`) on the client and two
+  on the server. On the client, the first will expose the names as read-only
+  (remember that `engine::expose` can take a vector of non-contiguous segments,
+  but you will need to use `name.size()+1` as the size of each segment to keep the null
   terminator of each name), and the second will expose the output array as write only.
+  The `engine::expose` function can be used to create these bulk handles. It takes
+  an `std::vector<std::pair<void*, size_t>>` of segments (represented by their address
+  and size). The address of the memory of an `std::string str` can be obtained using
+  `str.data()` (which should then be cast to `void*`).
 
 * You will need to transfer the two bulk handles in the RPC arguments,
   and since names can have a varying size, you will have to also transfer the
@@ -178,13 +180,19 @@ but we will just pretent). For this, you may use the example
   how much memory to allocate for its local buffer.
 
 * On the server side, you will need to allocate two buffers; one to receive
-  the names via a pull operation, the other to send the phone numbers via a push.
+  the names (you can use an `std::vector<char>` which you resize to the size required
+  to receive all the names; they will end up in this contiguous buffer, separated by
+  null characters) via a pull operation, the other to send the phone numbers via a push
+  (you can use an `std::vector<uint64_t>` for this one).
 
 * You will need to create two `bulk` instances to expose these buffers.
 
-* After having transferred the names, they will be in the server's contiguous
-  buffers. You can rely on the null-terminators to know where one name ends and
-  the next starts.
+* After having transferred the names (`remote_names_bulk >> local_names_bulk`),
+  they will be in the server's contiguous buffers. You can rely on the null-terminators
+  to know where one name ends and the next starts, lookup each name in the phonebook,
+  fill the `std::vector<uint64_t>` buffer allocated for the phone numbers, then
+  transfer the content of this local buffer to the client
+  (`remote_numbers_bulk << local_numbers_bulk`).
 
 
 ## Exercise 2: A proper phonebook Mochi component

@@ -11,6 +11,8 @@ int main(int argc, char** argv) {
         exit(0);
     }
 
+    /* (1) Instanciate a phonebook */
+
     tl::engine myEngine(argv[1], THALLIUM_SERVER_MODE);
 
     std::function<void(const tl::request&, const vector3d&, const vector3d&)> sum =
@@ -21,7 +23,12 @@ int main(int argc, char** argv) {
             req.respond(a+b);
         };
 
+    /* (3) Add the definitions for the insert and lookup lambdas.
+     * Don't forget to pass a reference to the phonebook in their capture.
+     */
+
     myEngine.define("sum", sum);
+    /* (4) Register the insert and lookup RPC handlers with the engine */
 
     std::cout << "Server is running at address " << myEngine.self() << std::endl;
     std::cout << "Copy this address to pass it to clients" << std::endl;

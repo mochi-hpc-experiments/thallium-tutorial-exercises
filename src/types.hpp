@@ -20,3 +20,10 @@ class vector3d {
         return {x+other.x, y+other.y, z+other.z};
     }
 };
+
+/* (2) Add an "entry" class containing an std::string name
+ * and a uint64_t phone number, an the appropriate serialize
+ * function. Note that you may need to include
+ * thallium/serialization/stl/string.hpp for string
+ * serialization to work.
+ */
