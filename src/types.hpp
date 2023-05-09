@@ -1,12 +1,10 @@
 class vector3d {
 
-    private:
+    public:
 
     double x;
     double y;
     double z;
-
-    public:
 
     vector3d(double a=0.0, double b=0.0, double c=0.0)
     : x(a), y(b), z(c) {}
