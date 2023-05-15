@@ -9,8 +9,8 @@ class vector3d {
     vector3d(double a=0.0, double b=0.0, double c=0.0)
     : x(a), y(b), z(c) {}
 
-    template<typename A>
-    void serialize(A& ar) {
+    template<typename Archive>
+    void serialize(Archive& ar) {
         ar & x;
         ar & y;
         ar & z;
